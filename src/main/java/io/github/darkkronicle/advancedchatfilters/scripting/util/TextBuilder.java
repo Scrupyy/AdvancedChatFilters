@@ -7,21 +7,25 @@
  */
 package io.github.darkkronicle.advancedchatfilters.scripting.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 
-/** Utility class to make creating {@link Text} easier for scripts. */
+import java.net.URI;
+import java.util.function.Function;
+
+/**
+ * Utility class to make creating {@link Text} easier for scripts.
+ */
 @Environment(EnvType.CLIENT)
 public class TextBuilder {
 
     private MutableText text;
 
-    /** Create's a new instance with the only text being an empty string. */
+    /**
+     * Create's a new instance with the only text being an empty string.
+     */
     public TextBuilder() {
         this("");
     }
@@ -36,7 +40,6 @@ public class TextBuilder {
     }
 
     /**
-     *
      * @return Text that was created
      */
     public MutableText build() {
@@ -129,11 +132,11 @@ public class TextBuilder {
      * <p>namespace:name
      *
      * @param namespace Namespace of the identifier
-     * @param name Name of the identifier
+     * @param name      Name of the identifier
      */
     public TextBuilder setFont(String namespace, String name) {
         // Dunno if this will do anything or how it works
-        applyStyle(style -> style.withFont(new Identifier(namespace, name)));
+        applyStyle(style -> style.withFont(Identifier.of(namespace, name)));
         return this;
     }
 
@@ -154,15 +157,39 @@ public class TextBuilder {
      * copy_to_clipboard
      *
      * @param action Action that will be set
-     * @param value Content of that action
+     * @param value  Content of that action
      */
     public TextBuilder setClickEvent(String action, String value) {
-        ClickEvent.Action clickAction = ClickEvent.Action.byName(action);
+        ClickEvent.Action clickAction;
+        try {
+            clickAction = ClickEvent.Action.valueOf(action);
+        } catch (IllegalArgumentException ignored) {
+            return this;
+        }
         if (!clickAction.isUserDefinable()) {
             return this;
         }
-        ClickEvent event = new ClickEvent(clickAction, value);
-        applyStyle(style -> style.withClickEvent(event));
+
+        ClickEvent clickEvent;
+        switch (clickAction) {
+            case OPEN_URL -> clickEvent = new ClickEvent.OpenUrl(URI.create(value));
+            case RUN_COMMAND -> clickEvent = new ClickEvent.RunCommand(value);
+            case SUGGEST_COMMAND -> clickEvent = new ClickEvent.SuggestCommand(value);
+            case CHANGE_PAGE -> {
+                try {
+                    int page = Integer.parseInt(value);
+                    clickEvent = new ClickEvent.ChangePage(page);
+                } catch (NumberFormatException e) {
+                    return this;
+                }
+            }
+            case COPY_TO_CLIPBOARD -> clickEvent = new ClickEvent.CopyToClipboard(value);
+            default -> {
+                return this;
+            }
+        }
+
+        applyStyle(style -> style.withClickEvent(clickEvent));
         return this;
     }
 
@@ -172,7 +199,7 @@ public class TextBuilder {
      * @param hoverText Text for hover
      */
     public TextBuilder setHoverText(Text hoverText) {
-        HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText);
+        HoverEvent hover = new HoverEvent.ShowText(hoverText);
         applyStyle(style -> style.withHoverEvent(hover));
         return this;
     }

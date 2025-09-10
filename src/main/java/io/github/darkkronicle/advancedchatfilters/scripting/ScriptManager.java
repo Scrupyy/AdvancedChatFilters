@@ -15,18 +15,19 @@ import delight.nashornsandbox.NashornSandboxes;
 import fi.dy.masa.malilib.util.FileUtils;
 import io.github.darkkronicle.advancedchatcore.interfaces.IMessageFilter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Executors;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Executors;
 
 @Environment(EnvType.CLIENT)
 public class ScriptManager implements IMessageFilter {
@@ -35,9 +36,11 @@ public class ScriptManager implements IMessageFilter {
 
     private NashornSandbox engine;
 
-    @Getter private List<ScriptFilter> filters = new ArrayList<>();
+    @Getter
+    private List<ScriptFilter> filters = new ArrayList<>();
 
-    @Getter private List<ScriptFilter> unimportedFilters = new ArrayList<>();
+    @Getter
+    private List<ScriptFilter> unimportedFilters = new ArrayList<>();
 
     public static ScriptManager getInstance() {
         return INSTANCE;
@@ -45,7 +48,8 @@ public class ScriptManager implements IMessageFilter {
 
     public JsonArray jsonData = new JsonArray();
 
-    private ScriptManager() {}
+    private ScriptManager() {
+    }
 
     private void setupEngine() {
         engine = NashornSandboxes.create();
@@ -65,7 +69,9 @@ public class ScriptManager implements IMessageFilter {
         engine.setExecutor(Executors.newSingleThreadExecutor());
     }
 
-    /** Setup all advanced filters */
+    /**
+     * Setup all advanced filters
+     */
     public void init() {
         if (!FiltersConfigStorage.ADVANCED_ON.config.getBooleanValue()) {
             // Do ***not*** evaluate any code unless this is turned on.
@@ -78,8 +84,7 @@ public class ScriptManager implements IMessageFilter {
 
         // Grab all *.js files
         File directory =
-                FileUtils.getConfigDirectory()
-                        .toPath()
+                FileUtils.getConfigDirectoryAsPath()
                         .resolve("advancedchat")
                         .resolve("filters")
                         .toFile();

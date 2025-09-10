@@ -14,14 +14,15 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.StyleFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiAdvancedFilterDisabled extends GuiBase {
 
@@ -60,14 +61,14 @@ public class GuiAdvancedFilterDisabled extends GuiBase {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float partialTicks) {
+        super.render(drawContext, mouseX, mouseY, partialTicks);
+        if (client == null) return;
+
         int width = client.getWindow().getScaledWidth();
         int y = 100;
         for (OrderedText warn : warning) {
-            drawCenteredTextWithShadow(
-                    matrixStack,
-                    client.textRenderer,
+            drawContext.drawCenteredTextWithShadow(client.textRenderer,
                     warn,
                     width / 2,
                     y,

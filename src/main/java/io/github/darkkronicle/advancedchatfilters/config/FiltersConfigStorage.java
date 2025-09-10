@@ -20,11 +20,12 @@ import io.github.darkkronicle.advancedchatcore.config.SaveableConfig;
 import io.github.darkkronicle.advancedchatfilters.AdvancedChatFilters;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class FiltersConfigStorage implements IConfigHandler {
@@ -44,8 +45,7 @@ public class FiltersConfigStorage implements IConfigHandler {
 
     public static void loadFromFile() {
         File configFile =
-                FileUtils.getConfigDirectory()
-                        .toPath()
+                FileUtils.getConfigDirectoryAsPath()
                         .resolve("advancedchat")
                         .resolve(CONFIG_FILE_NAME)
                         .toFile();
@@ -93,7 +93,7 @@ public class FiltersConfigStorage implements IConfigHandler {
     }
 
     public static void saveFromFile() {
-        File dir = FileUtils.getConfigDirectory().toPath().resolve("advancedchat").toFile();
+        File dir = FileUtils.getConfigDirectoryAsPath().resolve("advancedchat").toFile();
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             JsonObject root = new JsonObject();

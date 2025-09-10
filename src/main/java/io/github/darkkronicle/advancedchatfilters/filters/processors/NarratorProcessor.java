@@ -31,14 +31,14 @@ import io.github.darkkronicle.advancedchatcore.interfaces.IMatchProcessor;
 import io.github.darkkronicle.advancedchatcore.interfaces.IScreenSupplier;
 import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatcore.util.SearchResult;
-
-import java.util.List;
-import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJsonApplier {
@@ -53,7 +53,7 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
         @Override
         public io.github.darkkronicle.Konstruct.parser.Result parse(ParseContext context, List<Node> input) {
             io.github.darkkronicle.Konstruct.parser.Result r1 = Function.parseArgument(context, input, 0);
-            Narrator.getNarrator().say(r1.getContent().getString(), false);
+            Narrator.getNarrator().say(r1.getContent().getString(), false, 1);
             return io.github.darkkronicle.Konstruct.parser.Result.success(new NullObject());
         }
 
@@ -75,7 +75,7 @@ public class NarratorProcessor implements IMatchProcessor, IScreenSupplier, IJso
     @Override
     public Result processMatches(Text text, Text unfiltered, SearchResult search) {
         String content = search.getGroupReplacements(message.config.getStringValue(), 0);
-        Narrator.getNarrator().say(content, false);
+        Narrator.getNarrator().say(content, false, 1);
         return Result.getFromBool(true);
     }
 

@@ -7,7 +7,6 @@
  */
 package io.github.darkkronicle.advancedchatfilters.config.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
@@ -25,13 +24,14 @@ import io.github.darkkronicle.advancedchatcore.util.Colors;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 /*
    This class is based heavily off of https://github.com/maruohon/minihud/blob/d565d39c68bdcd3ed1e1cf2007491e03d9659f34/src/main/java/fi/dy/masa/minihud/gui/widgets/WidgetShapeEntry.java#L19 which is off the GNU LGPL
@@ -130,26 +130,24 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, boolean selected, MatrixStack matrixStack) {
-        RenderUtils.color(1f, 1f, 1f, 1f);
-
+    public void render(DrawContext drawContext, int mouseX, int mouseY, boolean selected) {
         // Draw a lighter background for the hovered and the selected entry
         if (selected || this.isMouseOver(mouseX, mouseY)) {
-            RenderUtils.drawRect(
+            RenderUtils.drawRect(drawContext,
                     this.x,
                     this.y,
                     this.width,
                     this.height,
                     Colors.getInstance().getColorOrWhite("listhover").color());
         } else if (this.isOdd) {
-            RenderUtils.drawRect(
+            RenderUtils.drawRect(drawContext,
                     this.x,
                     this.y,
                     this.width,
                     this.height,
                     Colors.getInstance().getColorOrWhite("list1").color());
         } else {
-            RenderUtils.drawRect(
+            RenderUtils.drawRect(drawContext,
                     this.x,
                     this.y,
                     this.width,
@@ -157,33 +155,28 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
                     Colors.getInstance().getColorOrWhite("list2").color());
         }
         String name = this.filter.getName().config.getStringValue();
-        this.drawString(
+        this.drawString(drawContext,
                 this.x + 4,
                 this.y + 7,
                 Colors.getInstance().getColorOrWhite("white").color(),
-                name,
-                matrixStack);
+                name
+        );
 
-        RenderUtils.color(1f, 1f, 1f, 1f);
-        RenderSystem.disableBlend();
 
-        this.drawTextFields(mouseX, mouseY, matrixStack);
+        this.drawTextFields(drawContext, mouseX, mouseY);
 
-        super.render(mouseX, mouseY, selected, matrixStack);
-
-        RenderUtils.disableDiffuseLighting();
+        super.render(drawContext, mouseX, mouseY, selected);
     }
 
     @Override
-    public void postRenderHovered(
-            int mouseX, int mouseY, boolean selected, MatrixStack matrixStack) {
-        super.postRenderHovered(mouseX, mouseY, selected, matrixStack);
+    public void postRenderHovered(DrawContext drawContext, int mouseX, int mouseY, boolean selected) {
+        super.postRenderHovered(drawContext, mouseX, mouseY, selected);
 
         if (mouseX >= this.x
                 && mouseX < this.buttonStartX
                 && mouseY >= this.y
                 && mouseY <= this.y + this.height) {
-            RenderUtils.drawHoverText(mouseX, mouseY, this.hoverLines, matrixStack);
+            RenderUtils.drawHoverText(drawContext, mouseX, mouseY, this.hoverLines);
         }
     }
 
@@ -291,9 +284,9 @@ public class WidgetFilterEntry extends WidgetListEntryBase<Filter> {
         return ret;
     }
 
-    protected void drawTextFields(int mouseX, int mouseY, MatrixStack matrixStack) {
+    protected void drawTextFields(DrawContext drawContext, int mouseX, int mouseY) {
         if (this.num != null) {
-            this.num.getTextField().render(matrixStack, mouseX, mouseY, 0f);
+            this.num.getTextField().render(drawContext, mouseX, mouseY, 0f);
         }
     }
 }

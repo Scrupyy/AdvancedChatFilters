@@ -23,14 +23,17 @@ import io.github.darkkronicle.advancedchatcore.ModuleHandler;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetColor;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetLabelHoverable;
 import io.github.darkkronicle.advancedchatcore.config.gui.widgets.WidgetToggle;
-import io.github.darkkronicle.advancedchatcore.util.*;
+import io.github.darkkronicle.advancedchatcore.util.Colors;
+import io.github.darkkronicle.advancedchatcore.util.SearchResult;
+import io.github.darkkronicle.advancedchatcore.util.StyleFormatter;
+import io.github.darkkronicle.advancedchatcore.util.TextBuilder;
 import io.github.darkkronicle.advancedchatfilters.FiltersHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.filters.ParentFilter;
 import io.github.darkkronicle.advancedchatfilters.filters.ReplaceFilter;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchReplaceRegistry;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -78,13 +81,13 @@ public class GuiFilterEditor extends GuiBase {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float partialTicks) {
+        super.render(drawContext, mouseX, mouseY, partialTicks);
         int y = test.getY() + 20;
         int x = 10;
         for (Text t : outputMessage) {
             if (t != null) {
-                textRenderer.drawWithShadow(matrixStack, t, x, y, -1);
+                drawContext.drawTextWithShadow(textRenderer, t, x, y, -1);
             }
             y += textRenderer.fontHeight + 2;
         }
@@ -257,11 +260,11 @@ public class GuiFilterEditor extends GuiBase {
                 filter.getReplaceTextColor().config.getBooleanValue() ? filter.getTextColor().config.get() : null
         );
         ParentFilter parent;
-            parent = new ParentFilter(
-                    filter.getFind(),
-                    filter.getFindString().config.getStringValue().replace("&", "§"),
-                    filter.getStripColors().config.getBooleanValue()
-            );
+        parent = new ParentFilter(
+                filter.getFind(),
+                filter.getFindString().config.getStringValue().replace("&", "§"),
+                filter.getStripColors().config.getBooleanValue()
+        );
 
         List<Text> built = new ArrayList<>();
         TextBuilder outputMessageBuilder = new TextBuilder();

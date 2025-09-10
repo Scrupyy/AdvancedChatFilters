@@ -28,16 +28,17 @@ import io.github.darkkronicle.advancedchatcore.util.FindType;
 import io.github.darkkronicle.advancedchatfilters.interfaces.IMatchReplace;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchProcessorRegistry;
 import io.github.darkkronicle.advancedchatfilters.registry.MatchReplaceRegistry;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.Data;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Filter Storage This class is used to store data for filters. Each filter is based off of this
@@ -63,20 +64,26 @@ public class Filter implements Comparable<Filter> {
             SaveableConfig.fromConfig(
                     "name", new ConfigString(translate("name"), "Default", translate("info.name")));
 
-    /** Whether or not it should be used to filter chat messages currently. */
+    /**
+     * Whether or not it should be used to filter chat messages currently.
+     */
     private SaveableConfig<ConfigBoolean> active =
             SaveableConfig.fromConfig(
                     "active",
                     new ConfigBoolean(translate("active"), false, translate("info.active")));
 
-    /** Whether or not it should be used to filter chat messages currently. */
+    /**
+     * Whether or not it should be used to filter chat messages currently.
+     */
     private SaveableConfig<ConfigBoolean> stripColors =
             SaveableConfig.fromConfig(
                     "stripColors",
                     new ConfigBoolean(
                             translate("stripcolors"), true, translate("info.stripcolors")));
 
-    /** The Expression to find a match. The way it is interpreted is defined by findType. */
+    /**
+     * The Expression to find a match. The way it is interpreted is defined by findType.
+     */
     private SaveableConfig<ConfigString> findString =
             SaveableConfig.fromConfig(
                     "findString",
@@ -308,7 +315,7 @@ public class Filter implements Comparable<Filter> {
                     continue;
                 }
                 if (r.event
-                        .getId()
+                        .id()
                         .getPath()
                         .replaceAll("\\.", "_")
                         .toLowerCase()

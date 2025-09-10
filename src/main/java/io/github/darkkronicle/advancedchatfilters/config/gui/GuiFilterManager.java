@@ -15,11 +15,11 @@ import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfig;
-import io.github.darkkronicle.advancedchatcore.config.gui.GuiConfigHandler;
 import io.github.darkkronicle.advancedchatfilters.config.Filter;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
+import net.minecraft.client.MinecraftClient;
+
 import java.util.Collections;
-import java.util.List;
 
 public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, WidgetListFilters>
         implements ISelectionListener<Filter> {
@@ -39,6 +39,15 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
     @Override
     protected int getBrowserWidth() {
         return this.width - 20;
+    }
+
+    @Override
+    public void resize(MinecraftClient mc, int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        this.clearElements();
+        this.initGui();
     }
 
     @Override
@@ -121,6 +130,7 @@ public class GuiFilterManager extends GuiListBase<Filter, WidgetFilterEntry, Wid
     }
 
     @Override
-    public void onSelectionChange(Filter entry) {}
+    public void onSelectionChange(Filter entry) {
+    }
 
 }

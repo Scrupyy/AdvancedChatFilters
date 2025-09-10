@@ -17,6 +17,7 @@ import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import io.github.darkkronicle.advancedchatfilters.config.FiltersConfigStorage;
 import io.github.darkkronicle.advancedchatfilters.scripting.ScriptFilter;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Util;
 
@@ -39,6 +40,15 @@ public class GuiAdvancedFilterManager
     @Override
     protected int getBrowserWidth() {
         return this.width - 20;
+    }
+
+    @Override
+    public void resize(MinecraftClient mc, int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        clearElements();
+        initGui();
     }
 
     @Override
@@ -78,7 +88,8 @@ public class GuiAdvancedFilterManager
     }
 
     @Override
-    public void onSelectionChange(ScriptFilter entry) {}
+    public void onSelectionChange(ScriptFilter entry) {
+    }
 
     public void save() {
         FiltersConfigStorage.saveFromFile();
@@ -118,8 +129,7 @@ public class GuiAdvancedFilterManager
             } else if (this.type == Type.OPEN_FOLDER) {
                 Util.getOperatingSystem()
                         .open(
-                                FileUtils.getConfigDirectory()
-                                        .toPath()
+                                FileUtils.getConfigDirectoryAsPath()
                                         .resolve("advancedchat")
                                         .resolve("filters")
                                         .toFile());
